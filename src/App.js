@@ -17,6 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -73,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 1, 1, 7),
     transition: theme.transitions.create('width'),
     width: '100%',
-    border: 'solid 1px black',
+    borderBottom: 'solid 1px black',
     [theme.breakpoints.up('sm')]: {
       width: '30vw',
       '&:focus': {
@@ -105,6 +107,22 @@ const useStyles = makeStyles(theme => ({
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
+  const [data, setData] = useState({ items: [] });
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function fetchData() {
+      const result = await axios('http://localhost:3000');
+      if (!ignore) setData(result.data);
+    }
+    fetchData();
+    return () => { ignore = true; }
+  }, [query]);
+
+  console.log(data.items);
+
   const classes = useStyles();
 
   return (
@@ -159,12 +177,24 @@ export default function Album() {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
               />
             </Grid>
           </Grid>
         </div>
         {/* End search unit */}
+
         <Container className={classes.cardGrid} maxWidth="md">
+        <ul>
+                {data.items.map(item => (
+                  <li key={item.name}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {item.name} {item.calories}
+                    </Typography>
+                  </li>
+                ))}
+              </ul>
           <Grid container spacing={4}>
             {cards.map(card => (
               <Grid item key={card} xs={12} sm={6} md={4}>
