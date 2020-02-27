@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -66,15 +67,17 @@ const useStyles = makeStyles(theme => ({
   },
   inputRoot: {
     color: 'inherit',
+    justifyContent: 'center',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
     transition: theme.transitions.create('width'),
     width: '100%',
+    border: 'solid 1px black',
     [theme.breakpoints.up('sm')]: {
-      width: 120,
+      width: '30vw',
       '&:focus': {
-        width: 200,
+        width: '40vw',
       },
     },
   },
@@ -111,8 +114,8 @@ export default function Album() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-          
-            <Typography component="h1" variant="h2" align="left" color="textPrimary" gutterBottom>
+
+            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               <FastfoodIcon className={classes.icon} fontSize={"large"} color={"primary"} />
               Faster way to manage your diet.
             </Typography>
@@ -139,20 +142,26 @@ export default function Album() {
 
         {/* Start search unit */}
         <div className={classes.search}>
-        <Container maxWidth="sm">
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              fullWidth={true}
-              placeholder="Search your food here..."
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-        </Container>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search your food here..."
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Grid>
+          </Grid>
         </div>
         {/* End search unit */}
         <Container className={classes.cardGrid} maxWidth="md">
