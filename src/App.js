@@ -107,7 +107,7 @@ const useStyles = makeStyles(theme => ({
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
-  const [data, setData] = useState({ items: [] });
+  const [data, setData] = useState({items: []});
   const [query, setQuery] = useState('');
 
   useEffect(() => {
@@ -118,8 +118,8 @@ export default function Album() {
       if (!ignore) setData(result.data);
     }
     fetchData();
-    return () => { ignore = true; }
-  }, [query]);
+    return () => { ignore = true;}
+  } , [query]);
 
   console.log(data.items);
 
@@ -180,21 +180,19 @@ export default function Album() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
+              <ul>
+                {data.items.map(item => (
+                  <li key={item.name}>
+                      {item.name} {item.calorie}
+                  </li>
+                ))}
+              </ul>
             </Grid>
           </Grid>
         </div>
         {/* End search unit */}
 
         <Container className={classes.cardGrid} maxWidth="md">
-        <ul>
-                {data.items.map(item => (
-                  <li key={item.name}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {item.name} {item.calories}
-                    </Typography>
-                  </li>
-                ))}
-              </ul>
           <Grid container spacing={4}>
             {cards.map(card => (
               <Grid item key={card} xs={12} sm={6} md={4}>
