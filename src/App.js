@@ -106,22 +106,38 @@ const useStyles = makeStyles(theme => ({
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-export default function Album() {
-  const [data, setData] = useState({items: []});
+export default function Calorie() {
+  const [data, setData] = useState([]);
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    let ignore = false;
+  // useEffect(() => {
+  //   let ignore = false;
 
-    async function fetchData() {
-      const result = await axios('http://localhost:3000');
-      if (!ignore) setData(result.data);
-    }
-    fetchData();
-    return () => { ignore = true;}
-  } , [query]);
+  //   async function fetchData() {
+  //     const result = await axios.post('http://localhost:3000/',{
+  //       name: query
+  //     });
+  //     if (!ignore) setData(result.data);
+  //   }
+  //   fetchData();
+  //   return () => { ignore = true;}
+  // } , [query]);
 
-  console.log(data.items);
+  const handleQueryChange = (e) => {
+    let newQuery = e.target.value;
+    setQuery(newQuery); //set state not sync
+    if (newQuery.length > 2){
+      async function fetchData() {
+        const result = await axios.post('http://localhost:3000/',{
+          name: newQuery
+        });
+        setData(result.data);
+      }
+      fetchData();
+    } else {
+      setData([]);
+      }
+  }
 
   const classes = useStyles();
 
@@ -178,12 +194,12 @@ export default function Album() {
                 }}
                 inputProps={{ 'aria-label': 'search' }}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleQueryChange}
               />
               <ul>
-                {data.items.map(item => (
-                  <li key={item.name}>
-                      {item.name} {item.calorie}
+                {data.map(item => (
+                  <li key={item.name + item.portion_display_name}>
+                      {item.name} {item.calories}
                   </li>
                 ))}
               </ul>
