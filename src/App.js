@@ -6,6 +6,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -60,7 +62,7 @@ const useStyles = makeStyles(theme => ({
   },
   searchIcon: {
     width: theme.spacing(7),
-    height: '100%',
+    height: '36px',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
@@ -83,6 +85,26 @@ const useStyles = makeStyles(theme => ({
       },
     },
   },
+  listRoot: {
+    width: '50vw',
+    [theme.breakpoints.down('sm')]: {
+      width: '80vw',
+    },
+    height: 400,
+    overflowY:'auto',
+    backgroundColor: theme.palette.background.paper,
+  },
+  listName: {
+    width: '50%',
+  },
+  listUnit: {
+    width: '25%',
+  },
+  listCal: {
+    width: '25%',
+    textAlign:'right',
+  },
+
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
@@ -126,9 +148,9 @@ export default function Calorie() {
   const handleQueryChange = (e) => {
     let newQuery = e.target.value;
     setQuery(newQuery); //set state not sync
-    if (newQuery.length > 2){
+    if (newQuery.length > 2) {
       async function fetchData() {
-        const result = await axios.post('http://localhost:3000/',{
+        const result = await axios.post('http://localhost:3000/', {
           name: newQuery
         });
         setData(result.data);
@@ -136,7 +158,11 @@ export default function Calorie() {
       fetchData();
     } else {
       setData([]);
-      }
+    }
+  }
+
+  const handleDataTranfer = () => {
+    alert('time to think');
   }
 
   const classes = useStyles();
@@ -178,7 +204,7 @@ export default function Calorie() {
         <div className={classes.search}>
           <Grid
             container
-            direction="row"
+            direction="column"
             justify="center"
             alignItems="center"
           >
@@ -196,13 +222,19 @@ export default function Calorie() {
                 value={query}
                 onChange={handleQueryChange}
               />
-              <ul>
+            </Grid>
+
+            <Grid item>
+              <div className={classes.listRoot}>
                 {data.map(item => (
-                  <li key={item.name + item.portion_display_name}>
-                      {item.name} {item.calories}
-                  </li>
-                ))}
-              </ul>
+                  <ListItem button onClick={handleDataTranfer} key={item.name + item.portion_display_name}>
+                    <ListItemText className={classes.listName} primary={`${item.name}`} />
+                    <ListItemText className={classes.listUnit} primary={`${item.portion_default} ${item.portion_display_name}`} />
+                    <ListItemText className={classes.listCal} primary={`${item.calories}cal`} />
+                  </ListItem>
+                ))
+                }
+              </div>
             </Grid>
           </Grid>
         </div>
