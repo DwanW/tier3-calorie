@@ -1,6 +1,4 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -21,6 +19,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import FoodCard from './FoodCard';
 
 function Copyright() {
   return (
@@ -91,7 +90,7 @@ const useStyles = makeStyles(theme => ({
       width: '80vw',
     },
     height: 400,
-    overflowY:'auto',
+    overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
   },
   listName: {
@@ -102,7 +101,7 @@ const useStyles = makeStyles(theme => ({
   },
   listCal: {
     width: '25%',
-    textAlign:'right',
+    textAlign: 'right',
   },
 
   cardGrid: {
@@ -126,11 +125,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Calorie() {
   const [data, setData] = useState([]);
   const [query, setQuery] = useState('');
+  const [basket, setBasket] = useState([]);
+  const [itemCal, setItemCal] = useState([]);
 
   // useEffect(() => {
   //   let ignore = false;
@@ -161,10 +161,44 @@ export default function Calorie() {
     }
   }
 
-  const handleDataTranfer = () => {
-    alert('time to think');
+  const addToBasket = (foodObj) => {
+    const newBasket = [...basket, foodObj];
+    setBasket(newBasket);
+    let newArr = [...itemCal,foodObj.calories];
+    setItemCal(newArr);
   }
 
+  const onDelete = (idx) => {
+    const tempBasket = [...basket];
+    tempBasket.splice(idx, 1);
+    setBasket(tempBasket);
+    let newArr = [...itemCal];
+    newArr.splice(idx, 1);
+    setItemCal(newArr);
+  }
+
+  const onValueChange = (idx, value) => {
+    let newArr = [...itemCal];
+    newArr[idx] = value;
+    setItemCal(newArr);
+    // setItemCal({[item.name]: value})
+  }
+
+  const createFoodCards = () => {
+    return basket.map((Item, idx) => (
+      <Grid item key={Item.name + Item.portion_display_name} xs={12} sm={12} md={6}>
+        <FoodCard
+          key={Item.name + Item.portion_display_name + idx}
+          foodItem={Item}
+          idx={idx}
+          onDelete={()=> onDelete(idx)}
+          onChange={onValueChange}
+        />
+      </Grid>
+    )
+    )
+  }
+  console.log(itemCal);
   const classes = useStyles();
 
   return (
@@ -181,6 +215,9 @@ export default function Calorie() {
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               lightning fast tool built for your health
+            </Typography>
+            <Typography variant="h1" align="center" color="textPrimary" paragraph>
+              {(itemCal.length > 0)? itemCal.reduce((a,b)=>a+b): 0} {" "}Cal
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
@@ -227,9 +264,9 @@ export default function Calorie() {
             <Grid item>
               <div className={classes.listRoot}>
                 {data.map(item => (
-                  <ListItem button onClick={handleDataTranfer} key={item.name + item.portion_display_name}>
+                  <ListItem button onClick={() => addToBasket(item)} key={item.name + item.portion_display_name}>
                     <ListItemText className={classes.listName} primary={`${item.name}`} />
-                    <ListItemText className={classes.listUnit} primary={`${item.portion_default} ${item.portion_display_name}`} />
+                    <ListItemText className={classes.listUnit} primary={`${item.portion_amount} ${item.portion_display_name}`} />
                     <ListItemText className={classes.listCal} primary={`${item.calories}cal`} />
                   </ListItem>
                 ))
@@ -240,38 +277,15 @@ export default function Calorie() {
         </div>
         {/* End search unit */}
 
+        {/* Start card unit */}
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
-            {cards.map(card => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
-                    </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe the content.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      View
-                    </Button>
-                    <Button size="small" color="primary">
-                      Edit
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+                {createFoodCards()}
           </Grid>
         </Container>
+        {/* End card unit */}
       </main>
+
       {/* Footer */}
       <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
