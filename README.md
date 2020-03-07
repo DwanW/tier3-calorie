@@ -25,4 +25,3 @@ knex
 ### Deployment
 
 heroku
-heroku git
