@@ -44,11 +44,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "inherit",
     color: "#34344A",
     padding: theme.spacing(8, 0, 6),
-    height: '80vh',
+    minHeight:600,
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      height: '60vh',
+      minHeight:400,
     },
   },
   heroHeader: {
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
       marginRight: theme.spacing(1),
       width: 'auto',
     },
-    height: "70vh",
+    height: 400,
   },
   searchGrid: {
     marginTop: theme.spacing(6),
