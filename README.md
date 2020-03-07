@@ -22,6 +22,6 @@ Axios.
 PostgreSQL 12 <br />
 knex 
 
-### Deployment
+### `Deployment`
 
 heroku
