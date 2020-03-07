@@ -162,7 +162,7 @@ export default function Calorie() {
     setQuery(newQuery); //set state not sync
     if (newQuery.length > 2) {
       async function fetchData() {
-        const result = await axios.post('http://localhost:3000/', {
+        const result = await axios.post('https://warm-retreat-69626.herokuapp.com/', {
           name: newQuery
         });
         setData(result.data);
@@ -206,7 +206,7 @@ export default function Calorie() {
 
   const createFoodCards = () => {
     return basket.map((Item, idx) => (
-      <Grid item key={Item.name + Item.portion_display_name + idx} xs={12} sm={6} md={4}>
+      <Grid item key={Item.name + Item.portion_display_name + idx} xs={10} sm={6} md={4}>
         <FoodCard
           key={Item.name + Item.portion_display_name + idx}
           foodItem={Item}
@@ -229,12 +229,15 @@ export default function Calorie() {
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography className={classes.heroHeader} component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Faster way to manage your diet
+              Great way to manage your diet
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               <span role="img" aria-label="lightning">⚡</span> fast tool built for your health
             </Typography>
-            <Typography className={classes.heroHeader} variant="h2" align="center" color="textPrimary" paragraph>
+            <Typography variant="h6" align="center" color="primary" paragraph>
+              Total Calorie:
+            </Typography>
+            <Typography className={classes.heroHeader} variant="h2" align="center" color="textPrimary">
               {(itemCal.length > 0) ? (itemCal.reduce((a, b) => a + b)).toFixed(2) : 0} {" "}Cal
             </Typography>
           </Container>
@@ -279,7 +282,7 @@ export default function Calorie() {
             </Grid>
           </Grid>
         </div>
-        <Snackbar open={open} autoHideDuration={1000} onClose={handleClose}>
+        <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
             Successfully added the Item :)
               </Alert>
